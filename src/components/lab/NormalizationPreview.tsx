@@ -1,0 +1,2 @@
+import { ArrowRight } from 'lucide-react';
+export function NormalizationPreview({raw,normalized}:{raw:string;normalized:unknown}){const value=typeof normalized==='string'?normalized:JSON.stringify(normalized);return <section className="normalization" aria-label="Normalización"><span><small>Entrada original</small>{raw||'∅'}</span><ArrowRight aria-hidden size={18}/><span><small>Entrada normalizada</small>{value||'∅'}</span>{raw!==value&&<em>Se han ajustado mayúsculas, diacríticos o símbolos ajenos al alfabeto.</em>}</section>}
