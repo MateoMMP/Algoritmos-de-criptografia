@@ -18,6 +18,7 @@ import {
 } from './classical';
 import { coincidence, factors, frequency, kasiski, modular, primality } from './analysis';
 import { diffieHellman, elGamal, feistel, rc4, rsaDemo } from './modern';
+import { cardano, enigmaM3, hill, m209Reduced, playfair, positionPermutation, secretPermutation } from './block2';
 
 export interface LessonInput {
   text: string;
@@ -52,6 +53,8 @@ export function runLesson(order: number, input: LessonInput): EngineResult<strin
       return adfgvx(input.text, input);
     case 12:
       return syndicalCode(input.text, input);
+    case 13:
+      return secretPermutation(input.text, input.key, input.decrypt);
     case 23:
     case 24:
     case 25:
@@ -60,6 +63,18 @@ export function runLesson(order: number, input: LessonInput): EngineResult<strin
       return affine(input.text, input);
     case 19:
       return xorCipher(input.text, input);
+    case 20:
+      return playfair(input.text, input.key, input.decrypt);
+    case 21:
+      return hill(input.text, input.key, input.decrypt);
+    case 22:
+      return positionPermutation(input.text, input.key, input.decrypt);
+    case 26:
+      return cardano(input.text, input.decrypt);
+    case 27:
+      return m209Reduced(input.text, input.key, input.decrypt);
+    case 28:
+      return enigmaM3(input.text, input.key);
     case 30:
       return frequency(input.text);
     case 31:

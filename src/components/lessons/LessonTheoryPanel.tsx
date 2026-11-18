@@ -1,9 +1,10 @@
-import { BookOpen } from 'lucide-react';
+import { AlertTriangle, BookOpen, FlaskConical, GraduationCap, Lightbulb } from 'lucide-react';
 import type { LessonDefinition } from '../../data/syllabus';
-import { getLessonTheory } from '../../data/lessonTheory';
+import { getLessonStudyGuide, getLessonTheory } from '../../data/lessonTheory';
 
 export function LessonTheoryPanel({ lesson }: { lesson: LessonDefinition }) {
   const theory = getLessonTheory(lesson.order);
+  const guide = getLessonStudyGuide(lesson.order);
   return (
     <section className="lesson-theory" aria-labelledby="theory-title">
       <header>
@@ -33,6 +34,26 @@ export function LessonTheoryPanel({ lesson }: { lesson: LessonDefinition }) {
           <code>{theory.formula}</code>
         </div>
       </div>
+      {guide && (
+        <div className="study-guide" aria-label="Guía para el examen">
+          <article>
+            <Lightbulb aria-hidden />
+            <div><h3>Idea mental</h3><p>{guide.intuition}</p></div>
+          </article>
+          <article>
+            <GraduationCap aria-hidden />
+            <div><h3>Qué escribir en el examen</h3><p>{guide.examTip}</p></div>
+          </article>
+          <article className="study-warning">
+            <AlertTriangle aria-hidden />
+            <div><h3>Error típico</h3><p>{guide.commonMistake}</p></div>
+          </article>
+          <article>
+            <FlaskConical aria-hidden />
+            <div><h3>Pruébalo en el laboratorio</h3><p>{guide.experiment}</p></div>
+          </article>
+        </div>
+      )}
     </section>
   );
 }

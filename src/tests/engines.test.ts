@@ -113,4 +113,20 @@ describe('registro y motores', () => {
   });
   it('IC presenta cálculo exacto', () =>
     expect(coincidence('AAAAAB').metrics?.IC).toBeCloseTo(2 / 3));
+  it('los modelos reales del bloque 2 recuperan su entrada', () => {
+    const cases: Array<[number, string, string]> = [
+      [13, 'ABCD', '2,0,3,1'],
+      [20, 'INSTRUMENTOS', 'MONARQUIA'],
+      [21, 'HELP', '9,4,5,7'],
+      [22, 'TRAN', '3,1,4,2'],
+      [26, 'MENSAJEENREJILLA', '4'],
+      [27, 'SEGURIDAD', 'Temario-27'],
+      [28, 'HELLOWORLD', 'I-II-III,AAA,AAA'],
+    ];
+    for (const [order, plain, key] of cases) {
+      const encrypted = runLesson(order, { text: plain, key, decrypt: false });
+      const decrypted = runLesson(order, { text: encrypted.output, key, decrypt: true });
+      expect(decrypted.output).toBe(plain);
+    }
+  });
 });

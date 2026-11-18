@@ -147,3 +147,31 @@ test('el código sindical muestra el desplazamiento de palabras', async ({ page 
   await page.getByRole('button', { name: 'Descifrar', exact: true }).first().click();
   await expect(page.getByText('HUELGA GENERAL', { exact: true }).first()).toBeVisible();
 });
+
+test('el bloque 2 combina guía de examen, modelo y cálculo real', async ({ page }) => {
+  await page.goto('/bloque/2/20-playfair');
+  await expect(page.getByRole('heading', { name: 'Playfair' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Qué escribir en el examen' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Error típico' })).toBeVisible();
+  await page.getByRole('button', { name: 'Cifrar', exact: true }).click();
+  const visual = page.getByLabel(/Visualización de Playfair/);
+  await expect(visual.getByText('Regla activa')).toBeVisible();
+  await expect(visual.locator('.b2-square span')).toHaveCount(25);
+  const encrypted = await page.locator('.output-card pre').textContent();
+  expect(encrypted).toMatch(/^[A-Z]+$/);
+  await page.getByRole('button', { name: 'Intercambiar' }).click();
+  await page.getByRole('button', { name: 'Descifrar', exact: true }).first().click();
+  await expect(page.locator('.output-card pre')).toHaveText('INSTRUMENTOS');
+});
+
+test('los modelos mecánicos del bloque 2 responden al paso activo', async ({ page }) => {
+  await page.goto('/bloque/2/26-rejilla-de-cardano-giratoria');
+  await page.getByRole('button', { name: 'Cifrar', exact: true }).click();
+  await expect(page.locator('.b2-cardano .open')).toHaveCount(4);
+  await page.getByRole('button', { name: 'Paso siguiente' }).click();
+  await expect(page.locator('.b2-turns .active')).toContainText('90°');
+  await page.goto('/bloque/2/28-enigma-m3');
+  await page.getByRole('button', { name: 'Cifrar', exact: true }).click();
+  await expect(page.locator('.b2-rotor-window span')).toHaveCount(3);
+  await expect(page.getByText(/avance ocurre antes/)).toBeVisible();
+});

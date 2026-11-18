@@ -11,6 +11,18 @@ npm install
 npm run dev
 ```
 
+En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, usa el lanzador de Windows
+sin modificar la política global:
+
+```powershell
+npm.cmd ci
+npm.cmd run dev
+```
+
+El mensaje `"vite" no se reconoce...` indica que todavía no se han instalado las dependencias
+locales. No hace falta instalar Vite globalmente: `npm install` o `npm.cmd ci` crea
+`node_modules/.bin/vite` con la versión fijada por el proyecto.
+
 Validación completa: `npm run check`. Pruebas de navegador: instalar Chromium una vez con `npx playwright install chromium` y ejecutar `npm run test:e2e`.
 
 ## Estructura

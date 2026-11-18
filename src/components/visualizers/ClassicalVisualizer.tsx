@@ -14,6 +14,7 @@ import {
   transformAlberti,
   transformPorta,
 } from '../../engines/classical';
+import { Block2Visualizer } from './Block2Visualizer';
 
 interface Props {
   lesson: LessonDefinition;
@@ -863,7 +864,7 @@ function SyndicalCode({
   );
 }
 
-function SecretMap() {
+export function SecretMap() {
   return (
     <>
       <p className="viz-caption">
@@ -892,7 +893,7 @@ function SecretMap() {
   );
 }
 
-function BookCipher({ input }: { input: string }) {
+export function BookCipher({ input }: { input: string }) {
   const words = input.toUpperCase().split(/\s+/).filter(Boolean);
   return (
     <>
@@ -918,7 +919,7 @@ function BookCipher({ input }: { input: string }) {
   );
 }
 
-function Homophonic() {
+export function Homophonic() {
   const groups = [
     ['E', '01', '14', '37', '62'],
     ['A', '05', '28', '70'],
@@ -948,7 +949,7 @@ function Homophonic() {
   );
 }
 
-function XorRows({ input, keyValue, result }: { input: string; keyValue: string; result: string }) {
+export function XorRows({ input, keyValue, result }: { input: string; keyValue: string; result: string }) {
   const byte = new TextEncoder().encode(input)[0] ?? 0,
     key = new TextEncoder().encode(keyValue || 'K')[0] ?? 0,
     out = byte ^ key;
@@ -991,7 +992,7 @@ function XorRows({ input, keyValue, result }: { input: string; keyValue: string;
   );
 }
 
-function ShufflePath({ input }: { input: string }) {
+export function ShufflePath({ input }: { input: string }) {
   const text = input.replace(/\s/g, '').toUpperCase().padEnd(16, '·');
   const path = [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12];
   return (
@@ -1012,7 +1013,7 @@ function ShufflePath({ input }: { input: string }) {
   );
 }
 
-function Columnar({ input, keyValue }: { input: string; keyValue: string }) {
+export function Columnar({ input, keyValue }: { input: string; keyValue: string }) {
   const key = normalizeText(keyValue || 'CLAVE'),
     text = input.replace(/\s/g, '').toUpperCase(),
     cols = Math.max(2, key.length),
@@ -1050,7 +1051,7 @@ function Columnar({ input, keyValue }: { input: string; keyValue: string }) {
   );
 }
 
-function HillMatrix({ input, keyValue }: { input: string; keyValue: string }) {
+export function HillMatrix({ input, keyValue }: { input: string; keyValue: string }) {
   const nums = (keyValue.match(/-?\d+/g) ?? ['9', '4', '5', '7']).slice(0, 4),
     letters = normalizeText(input).slice(0, 2).padEnd(2, 'A');
   return (
@@ -1080,7 +1081,7 @@ const rotate = (point: number[], n: number): number[] => {
     c = point[1] ?? 0;
   return [c, n - 1 - r];
 };
-function Cardano() {
+export function Cardano() {
   const holes = [
     [0, 0],
     [0, 1],
@@ -1118,7 +1119,7 @@ function Cardano() {
   );
 }
 
-function Machine({ order }: { order: number }) {
+export function Machine({ order }: { order: number }) {
   if (order === 27)
     return (
       <div className="wheel-bank">
@@ -1208,7 +1209,9 @@ export function ClassicalVisualizer(props: Props) {
   const { lesson, input, keyValue, result, decrypt, activeStep } = props;
   if (lesson.block > 2) return null;
   let body: React.ReactNode;
-  switch (lesson.order) {
+  if (lesson.block === 2) {
+    body = <Block2Visualizer {...props} />;
+  } else switch (lesson.order) {
     case 1:
       body = <Scytale input={input} keyValue={keyValue} decrypt={decrypt} />;
       break;
@@ -1287,36 +1290,6 @@ export function ClassicalVisualizer(props: Props) {
           activeStep={activeStep}
         />
       );
-      break;
-    case 13:
-      body = <SecretMap />;
-      break;
-    case 16:
-      body = <BookCipher input={input} />;
-      break;
-    case 17:
-      body = <Homophonic />;
-      break;
-    case 19:
-      body = <XorRows input={input} keyValue={keyValue} result={result.output} />;
-      break;
-    case 21:
-      body = <HillMatrix input={input} keyValue={keyValue} />;
-      break;
-    case 22:
-      body = <ShufflePath input={input} />;
-      break;
-    case 23:
-    case 24:
-    case 25:
-      body = <Columnar input={input} keyValue={keyValue} />;
-      break;
-    case 26:
-      body = <Cardano />;
-      break;
-    case 27:
-    case 28:
-      body = <Machine order={lesson.order} />;
       break;
     default:
       body = <Mapping input={input} result={result.output} order={lesson.order} />;
